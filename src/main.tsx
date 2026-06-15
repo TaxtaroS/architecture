@@ -508,6 +508,7 @@ function FlowLine({ from, to, label }: { from: FlowNode; to: FlowNode; label: st
 
 function App() {
   const [activeId, setActiveId] = useState<NodeId>('nginx');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const active = details[activeId];
   const activeNode = nodes.find((node) => node.id === activeId);
 
@@ -515,6 +516,11 @@ function App() {
     () => connections.filter(([from, to]) => from === activeId || to === activeId),
     [activeId],
   );
+
+  const selectNode = (id: NodeId) => {
+    setActiveId(id);
+    setIsDrawerOpen(true);
+  };
 
   return (
     <main className="app-shell">
@@ -570,7 +576,7 @@ function App() {
                             <button
                               key={sideId}
                               className={`flow-node inline side ${sideNode.shape || 'process'} ${sideNode.tone} ${activeId === sideId ? 'active' : ''}`}
-                              onClick={() => setActiveId(sideId)}
+                              onClick={() => selectNode(sideId)}
                             >
                               <span>{sideNode.eyebrow}</span>
                               <strong>{sideNode.title}</strong>
@@ -582,7 +588,7 @@ function App() {
 
                       <button
                         className={`flow-node inline ${node.shape || 'process'} ${node.tone} ${activeId === node.id ? 'active' : ''}`}
-                        onClick={() => setActiveId(node.id)}
+                        onClick={() => selectNode(node.id)}
                       >
                         <span>{node.eyebrow}</span>
                         <strong>{node.title}</strong>
@@ -634,7 +640,16 @@ function App() {
           </div>
         </div>
 
-        <aside className="detail-panel">
+        <button
+          className={`detail-backdrop ${isDrawerOpen ? 'open' : ''}`}
+          aria-label="설명 패널 닫기"
+          onClick={() => setIsDrawerOpen(false)}
+        />
+
+        <aside className={`detail-panel ${isDrawerOpen ? 'open' : ''}`} aria-live="polite">
+          <button className="drawer-close" type="button" onClick={() => setIsDrawerOpen(false)}>
+            닫기
+          </button>
           <div className={`detail-accent ${activeNode?.tone || ''}`} />
           <p className="eyebrow">Service Detail</p>
           <h2>{active.title}</h2>

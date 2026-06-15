@@ -608,7 +608,6 @@ h2 {
 .flow-node:hover,
 .flow-node.active {
   transform: translate(-50%, -50%) scale(1.05);
-  box-shadow: 0 20px 34px rgba(18, 58, 80, 0.22);
 }
 
 .flow-node span {
@@ -703,6 +702,14 @@ h2 {
   max-height: calc(100vh - 24px);
   overflow: auto;
   padding: 18px;
+}
+
+.detail-backdrop {
+  display: none;
+}
+
+.drawer-close {
+  display: none;
 }
 
 .detail-accent {
@@ -848,8 +855,69 @@ h2 {
   }
 
   .detail-panel {
-    position: static;
-    max-height: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 60;
+    width: min(460px, calc(100vw - 28px));
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 8px 0 0 8px;
+    transform: translateX(108%);
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease;
+    box-shadow: -24px 0 48px rgba(18, 40, 54, 0.28);
+  }
+
+  .detail-panel.open {
+    transform: translateX(0);
+  }
+
+  .detail-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: block;
+    border: 0;
+    background: rgba(8, 24, 36, 0);
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 180ms ease,
+      background 180ms ease;
+  }
+
+  .detail-backdrop.open {
+    background: rgba(8, 24, 36, 0.42);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawer-close {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    min-width: 54px;
+    height: 34px;
+    margin: -4px -4px 8px 10px;
+    border: 1px solid #c8d8df;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #31515f;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(35, 55, 72, 0.12);
+  }
+
+  .drawer-close:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(35, 55, 72, 0.16);
   }
 
   .flow-stage {
