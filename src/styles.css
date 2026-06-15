@@ -232,7 +232,8 @@ h2 {
 .flow-connector {
   position: relative;
   width: 220px;
-  height: 54px;
+  height: 58px;
+  margin: -1px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,30 +242,32 @@ h2 {
 .flow-connector::before {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -2px;
+  bottom: -3px;
   left: 50%;
-  width: 3px;
+  width: 4px;
   transform: translateX(-50%);
   background: #7890a3;
+  border-radius: 999px;
 }
 
 .flow-connector::after {
   content: "";
   position: absolute;
-  bottom: 2px;
+  bottom: -3px;
   left: 50%;
-  width: 12px;
-  height: 12px;
+  width: 15px;
+  height: 15px;
   transform: translateX(-50%) rotate(45deg);
-  border-right: 3px solid #7890a3;
-  border-bottom: 3px solid #7890a3;
+  border-right: 4px solid #7890a3;
+  border-bottom: 4px solid #7890a3;
 }
 
 .flow-connector span {
   position: relative;
   z-index: 2;
   max-width: 190px;
+  margin-left: 172px;
   padding: 4px 9px;
   border: 1px solid #c9d6df;
   border-radius: 999px;
@@ -485,15 +488,15 @@ h2 {
   align-items: center;
   width: min(220px, 100%);
   min-height: 116px;
-  padding-left: 42px;
+  padding-left: 58px;
 }
 
 .branch-route::before {
   content: "";
   position: absolute;
-  left: -30px;
+  left: -92px;
   top: 50%;
-  width: 62px;
+  width: 118px;
   height: 5px;
   transform: translateY(-50%);
   background: #7890a3;
@@ -503,7 +506,7 @@ h2 {
 .branch-route::after {
   content: "";
   position: absolute;
-  left: 17px;
+  left: 16px;
   top: calc(50% - 8px);
   width: 17px;
   height: 17px;
@@ -513,19 +516,19 @@ h2 {
 }
 
 .retry-route {
-  padding-right: 42px;
+  padding-right: 58px;
   padding-left: 0;
   justify-items: end;
 }
 
 .retry-route::before {
   left: auto;
-  right: -30px;
+  right: -92px;
 }
 
 .retry-route::after {
   left: auto;
-  right: 17px;
+  right: 16px;
   transform: rotate(135deg);
 }
 
@@ -579,9 +582,9 @@ h2 {
   content: "";
   position: absolute;
   left: 18px;
-  top: -6px;
+  top: -10px;
   width: 5px;
-  height: 44px;
+  height: 52px;
   background: #7890a3;
   border-radius: 999px;
 }
@@ -590,7 +593,7 @@ h2 {
   content: "";
   position: absolute;
   left: 13px;
-  top: 30px;
+  top: 32px;
   width: 17px;
   height: 17px;
   transform: rotate(45deg);
@@ -606,9 +609,9 @@ h2 {
   content: "";
   position: absolute;
   left: 18px;
-  bottom: -6px;
+  bottom: -10px;
   width: 5px;
-  height: 44px;
+  height: 52px;
   background: #7890a3;
   border-radius: 999px;
 }
@@ -617,7 +620,7 @@ h2 {
   content: "";
   position: absolute;
   left: 13px;
-  bottom: 30px;
+  bottom: 32px;
   width: 17px;
   height: 17px;
   transform: rotate(225deg);
