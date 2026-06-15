@@ -188,12 +188,14 @@ GET /api/ready`,
       'PaperMate의 AI 분석은 단순 API 호출이 아니라, 문서 근거를 먼저 만들고 LLM 답변을 검증하는 방식으로 신뢰도를 높입니다.',
     bullets: [
       '문서 추출: PDF/HWPX/DOCX/이미지/TXT 텍스트 추출',
+      'HWPX/OWPML 처리: ZIP 패키지 내부의 XML 파일을 열어 본문 텍스트와 이미지 자산을 파싱',
       '로컬 분석: 키워드, 수치 후보, 주제 후보, 관련 문서 구간 추출',
       'LLM 호출: OpenAI 또는 Gemini를 환경과 요청에 맞게 선택',
       'Grounding 검증: 업로드 문서에 없는 수치나 표현을 탐지',
       'Fallback: API 키가 없거나 LLM 실패 시 문서 기반 답변 제공',
     ],
     code: `문서 추출
+  -> HWPX/OWPML: ZIP 내부 XML 파싱
   -> 로컬 분석
   -> LLM 응답 생성
   -> grounding 검증
@@ -514,7 +516,7 @@ function App() {
                   문서 분석 파이프라인
                 </text>
                 <text className="ts" x="340" y="530" textAnchor="middle" dominantBaseline="central">
-                  추출, 로컬 분석
+                  추출(owpml), 로컬 분석
                 </text>
               </g>
               <line x1="340" y1="548" x2="340" y2="584" className="arr" markerEnd="url(#arrow)" />
