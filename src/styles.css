@@ -317,11 +317,34 @@ h2 {
   color: #17202a;
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 10px 22px rgba(29, 47, 64, 0.12);
+  box-shadow:
+    0 10px 22px rgba(29, 47, 64, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
   transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    border-color 160ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    filter 180ms ease;
+}
+
+.flow-node:hover,
+.flow-node.active {
+  box-shadow:
+    0 24px 40px rgba(18, 58, 80, 0.25),
+    0 0 0 4px rgba(20, 138, 131, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  filter: saturate(1.06);
+}
+
+.flow-node:focus-visible {
+  outline: 4px solid rgba(20, 138, 131, 0.34);
+  outline-offset: 4px;
+}
+
+.flow-node:active {
+  box-shadow:
+    0 12px 22px rgba(18, 58, 80, 0.18),
+    0 0 0 3px rgba(20, 138, 131, 0.14);
 }
 
 .flow-node.inline {
@@ -338,7 +361,37 @@ h2 {
 
 .flow-node.inline:hover,
 .flow-node.inline.active {
-  transform: translateY(-2px);
+  transform: translateY(-7px) scale(1.025);
+}
+
+.flow-node.inline:active {
+  transform: translateY(-2px) scale(1.005);
+}
+
+.flow-node.inline::before {
+  content: "클릭";
+  position: absolute;
+  right: 9px;
+  top: 8px;
+  z-index: 5;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: #4f6475;
+  font-size: 10px;
+  font-weight: 900;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+  pointer-events: none;
+}
+
+.flow-node.inline:hover::before,
+.flow-node.inline:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .flow-node.inline.terminator {
@@ -356,6 +409,17 @@ h2 {
   border-radius: 0;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
   text-align: center;
+}
+
+.flow-node.inline.decision::before {
+  right: 50%;
+  top: 28px;
+  transform: translate(50%, -4px);
+}
+
+.flow-node.inline.decision:hover::before,
+.flow-node.inline.decision:focus-visible::before {
+  transform: translate(50%, 0);
 }
 
 .flow-node.inline.data {
@@ -380,6 +444,11 @@ h2 {
   border-bottom: 2px solid currentColor;
   opacity: 0.28;
   pointer-events: none;
+}
+
+.flow-node.inline.document:hover::after,
+.flow-node.inline.document.active::after {
+  opacity: 0.42;
 }
 
 .flow-node.inline.decision strong {
