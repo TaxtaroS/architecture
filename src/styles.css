@@ -81,16 +81,10 @@ body {
 
 .workspace {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: minmax(0, 5.5fr) minmax(340px, 4.5fr);
   gap: 24px;
   margin-top: 24px;
   position: relative;
-}
-
-@media (max-width: 900px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
 }
 
 .flow-card {
@@ -222,6 +216,9 @@ body {
   align-self: start;
   position: sticky;
   top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-shadow: 0 18px 40px rgba(44, 44, 42, 0.08);
 }
 
 .detail-panel h2 {
@@ -287,45 +284,80 @@ body {
   display: none;
 }
 
+.detail-backdrop {
+  display: none;
+}
+
 @media (max-width: 900px) {
-  .detail-panel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 85%;
-    max-width: 360px;
-    transform: translateX(100%);
-    transition: transform 0.2s ease;
-    z-index: 20;
-    overflow-y: auto;
+  .workspace {
+    display: block;
   }
 
-  .detail-panel.open {
+  .flow-card {
+    position: relative;
+  }
+
+  .detail-panel {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    left: auto;
+    width: min(440px, calc(100vw - 32px));
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    transform: translateX(100%);
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+    z-index: 20;
+    overflow-y: auto;
+    box-shadow: -22px 0 42px rgba(44, 44, 42, 0.24);
+  }
+
+  .workspace .detail-panel.open {
     transform: translateX(0);
   }
 
   .drawer-close {
-    display: block;
-    margin-bottom: 12px;
-    background: none;
-    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    min-width: 54px;
+    height: 34px;
+    margin: -4px -4px 10px 10px;
+    background: #fff;
+    border: 1px solid var(--b);
+    border-radius: 999px;
     font-size: 14px;
     color: var(--p);
+    font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 8px 18px rgba(44, 44, 42, 0.12);
   }
 
   .detail-backdrop {
-    display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.3);
+    display: block;
+    background: rgba(44, 44, 42, 0);
     border: none;
     z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 0.18s ease,
+      background 0.18s ease;
   }
 
   .detail-backdrop.open {
-    display: block;
+    background: rgba(44, 44, 42, 0.34);
+    pointer-events: auto;
+    opacity: 1;
   }
 }
 
