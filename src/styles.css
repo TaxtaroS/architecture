@@ -486,19 +486,18 @@ h2 {
   display: grid;
   gap: 10px;
   align-items: center;
-  width: min(220px, 100%);
-  min-height: 116px;
-  padding-left: 58px;
+  width: min(260px, 100%);
+  min-height: 154px;
+  padding-left: 78px;
 }
 
 .branch-route::before {
   content: "";
   position: absolute;
-  left: -92px;
-  top: 50%;
-  width: 118px;
+  left: -116px;
+  top: 44px;
+  width: 144px;
   height: 5px;
-  transform: translateY(-50%);
   background: #7890a3;
   border-radius: 999px;
 }
@@ -506,8 +505,8 @@ h2 {
 .branch-route::after {
   content: "";
   position: absolute;
-  left: 16px;
-  top: calc(50% - 8px);
+  left: 14px;
+  top: 35px;
   width: 17px;
   height: 17px;
   transform: rotate(-45deg);
@@ -516,19 +515,22 @@ h2 {
 }
 
 .retry-route {
-  padding-right: 58px;
+  padding-right: 78px;
   padding-left: 0;
   justify-items: end;
 }
 
 .retry-route::before {
   left: auto;
-  right: -92px;
+  right: -116px;
+  top: 104px;
+  width: 144px;
 }
 
 .retry-route::after {
   left: auto;
-  right: 16px;
+  right: 14px;
+  top: 95px;
   transform: rotate(135deg);
 }
 
@@ -539,6 +541,14 @@ h2 {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 8px 18px rgba(35, 55, 72, 0.08);
+}
+
+.fallback-route .branch-note {
+  align-self: start;
+}
+
+.retry-route .branch-note {
+  align-self: end;
 }
 
 .branch-note b {
@@ -558,7 +568,6 @@ h2 {
 .branch-target {
   position: relative;
   width: 160px;
-  margin-left: 8px;
   color: #415363;
   font-size: 12px;
   font-weight: 900;
@@ -575,16 +584,17 @@ h2 {
 }
 
 .branch-target.down {
-  padding-top: 36px;
+  margin-left: 20px;
+  padding-top: 40px;
 }
 
 .branch-target.down::before {
   content: "";
   position: absolute;
   left: 18px;
-  top: -10px;
+  top: -42px;
   width: 5px;
-  height: 52px;
+  height: 86px;
   background: #7890a3;
   border-radius: 999px;
 }
@@ -593,7 +603,7 @@ h2 {
   content: "";
   position: absolute;
   left: 13px;
-  top: 32px;
+  top: 33px;
   width: 17px;
   height: 17px;
   transform: rotate(45deg);
@@ -602,16 +612,17 @@ h2 {
 }
 
 .branch-target.up {
-  padding-bottom: 36px;
+  margin-right: 20px;
+  padding-bottom: 40px;
 }
 
 .branch-target.up::before {
   content: "";
   position: absolute;
-  left: 18px;
-  bottom: -10px;
+  right: 18px;
+  bottom: -42px;
   width: 5px;
-  height: 52px;
+  height: 86px;
   background: #7890a3;
   border-radius: 999px;
 }
@@ -619,8 +630,8 @@ h2 {
 .branch-target.up::after {
   content: "";
   position: absolute;
-  left: 13px;
-  bottom: 32px;
+  right: 13px;
+  bottom: 33px;
   width: 17px;
   height: 17px;
   transform: rotate(225deg);
