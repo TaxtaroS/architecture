@@ -485,30 +485,48 @@ h2 {
   align-items: center;
   width: min(220px, 100%);
   min-height: 116px;
-  padding-left: 32px;
+  padding-left: 42px;
 }
 
 .branch-route::before {
   content: "";
   position: absolute;
-  left: -18px;
+  left: -30px;
   top: 50%;
-  width: 46px;
-  height: 3px;
+  width: 62px;
+  height: 5px;
   transform: translateY(-50%);
   background: #7890a3;
+  border-radius: 999px;
 }
 
 .branch-route::after {
   content: "";
   position: absolute;
-  left: 22px;
-  top: calc(50% - 5px);
-  width: 11px;
-  height: 11px;
+  left: 17px;
+  top: calc(50% - 8px);
+  width: 17px;
+  height: 17px;
   transform: rotate(-45deg);
-  border-right: 3px solid #7890a3;
-  border-bottom: 3px solid #7890a3;
+  border-right: 5px solid #7890a3;
+  border-bottom: 5px solid #7890a3;
+}
+
+.retry-route {
+  padding-right: 42px;
+  padding-left: 0;
+  justify-items: end;
+}
+
+.retry-route::before {
+  left: auto;
+  right: -30px;
+}
+
+.retry-route::after {
+  left: auto;
+  right: 17px;
+  transform: rotate(135deg);
 }
 
 .branch-note {
@@ -562,9 +580,10 @@ h2 {
   position: absolute;
   left: 18px;
   top: -6px;
-  width: 3px;
+  width: 5px;
   height: 44px;
   background: #7890a3;
+  border-radius: 999px;
 }
 
 .branch-target.down::after {
@@ -572,11 +591,11 @@ h2 {
   position: absolute;
   left: 13px;
   top: 30px;
-  width: 11px;
-  height: 11px;
+  width: 17px;
+  height: 17px;
   transform: rotate(45deg);
-  border-right: 3px solid #7890a3;
-  border-bottom: 3px solid #7890a3;
+  border-right: 5px solid #7890a3;
+  border-bottom: 5px solid #7890a3;
 }
 
 .branch-target.up {
@@ -588,9 +607,10 @@ h2 {
   position: absolute;
   left: 18px;
   bottom: -6px;
-  width: 3px;
+  width: 5px;
   height: 44px;
   background: #7890a3;
+  border-radius: 999px;
 }
 
 .branch-target.up::after {
@@ -598,11 +618,11 @@ h2 {
   position: absolute;
   left: 13px;
   bottom: 30px;
-  width: 11px;
-  height: 11px;
+  width: 17px;
+  height: 17px;
   transform: rotate(225deg);
-  border-right: 3px solid #7890a3;
-  border-bottom: 3px solid #7890a3;
+  border-right: 5px solid #7890a3;
+  border-bottom: 5px solid #7890a3;
 }
 
 .flow-node:hover,

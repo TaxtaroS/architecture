@@ -569,7 +569,18 @@ function App() {
                 return (
                   <div className="flow-step" key={step.id}>
                     <div className="flow-main-row">
-                      <div className="side-slot left">
+                      <div className={`side-slot left ${step.id === 'grounding' ? 'has-retry-route' : ''}`}>
+                        {step.id === 'grounding' && (
+                          <div className="branch-route retry-route">
+                            <div className="branch-target up">
+                              <span>LLM 사용 가능? 재검토</span>
+                            </div>
+                            <div className="branch-note">
+                              <b>불일치</b>
+                              <span>문서 근거 기준으로 재검토</span>
+                            </div>
+                          </div>
+                        )}
                         {step.side?.map((sideId) => {
                           const sideNode = nodes.find((item) => item.id === sideId)!;
                           return (
@@ -604,17 +615,6 @@ function App() {
                             </div>
                             <div className="branch-target down">
                               <span>분석 답변 반환</span>
-                            </div>
-                          </div>
-                        )}
-                        {step.id === 'grounding' && (
-                          <div className="branch-route retry-route">
-                            <div className="branch-target up">
-                              <span>LLM 사용 가능? 재검토</span>
-                            </div>
-                            <div className="branch-note">
-                              <b>불일치</b>
-                              <span>문서 근거 기준으로 재검토</span>
                             </div>
                           </div>
                         )}
