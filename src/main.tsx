@@ -591,15 +591,25 @@ function App() {
 
                       <div className="side-slot right">
                         {step.id === 'llm' && (
-                          <div className="branch-note">
-                            <b>아니오</b>
-                            <span>fallback 답변으로 이동</span>
+                          <div className="branch-route fallback-route">
+                            <div className="branch-note">
+                              <b>아니오</b>
+                              <span>fallback 답변 생성</span>
+                            </div>
+                            <div className="branch-target down">
+                              <span>분석 답변 반환</span>
+                            </div>
                           </div>
                         )}
                         {step.id === 'grounding' && (
-                          <div className="branch-note">
-                            <b>불일치</b>
-                            <span>근거 기반 답변으로 제한</span>
+                          <div className="branch-route retry-route">
+                            <div className="branch-target up">
+                              <span>LLM 사용 가능? 재검토</span>
+                            </div>
+                            <div className="branch-note">
+                              <b>불일치</b>
+                              <span>문서 근거 기준으로 재검토</span>
+                            </div>
                           </div>
                         )}
                       </div>
