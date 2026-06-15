@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -8,29 +8,19 @@ type NodeId =
   | 'start'
   | 'user'
   | 'web'
-  | 'nginx'
   | 'route'
+  | 'nginx'
+  | 'vercel'
   | 'was'
+  | 'db'
+  | 'ops'
   | 'pipeline'
   | 'llm'
-  | 'db'
   | 'ai'
+  | 'fallback'
   | 'grounding'
   | 'answer'
-  | 'deploy'
-  | 'ops'
   | 'end';
-
-interface FlowNode {
-  id: NodeId;
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-  x: number;
-  y: number;
-  tone: string;
-  shape?: 'terminator' | 'process' | 'decision' | 'data' | 'document';
-}
 
 interface Detail {
   title: string;
@@ -41,159 +31,6 @@ interface Detail {
   image?: string;
   imageCaption?: string;
 }
-
-const nodes: FlowNode[] = [
-  {
-    id: 'start',
-    eyebrow: 'START',
-    title: '서비스 접속',
-    subtitle: '사용자가 PaperMate에 들어옴',
-    x: 0,
-    y: 0,
-    tone: 'blue',
-    shape: 'terminator',
-  },
-  {
-    id: 'user',
-    eyebrow: '사용자',
-    title: '문서 업로드 / 질문',
-    subtitle: '브라우저에서 PaperMate 사용',
-    x: 10,
-    y: 40,
-    tone: 'blue',
-    shape: 'data',
-  },
-  {
-    id: 'web',
-    eyebrow: 'WEB',
-    title: 'React 화면',
-    subtitle: '업로드, Q&A, 프로젝트 UI',
-    x: 23,
-    y: 18,
-    tone: 'violet',
-    shape: 'process',
-  },
-  {
-    id: 'route',
-    eyebrow: '분기',
-    title: '배포 방식은?',
-    subtitle: 'Vercel rewrite 또는 Docker nginx',
-    x: 0,
-    y: 0,
-    tone: 'green',
-    shape: 'decision',
-  },
-  {
-    id: 'nginx',
-    eyebrow: 'PROXY',
-    title: 'Nginx / Rewrite',
-    subtitle: 'API 요청을 백엔드로 전달',
-    x: 23,
-    y: 61,
-    tone: 'green',
-    shape: 'process',
-  },
-  {
-    id: 'was',
-    eyebrow: 'WAS',
-    title: 'FastAPI 백엔드',
-    subtitle: '인증, 파일, 분석 API',
-    x: 45,
-    y: 40,
-    tone: 'orange',
-    shape: 'process',
-  },
-  {
-    id: 'pipeline',
-    eyebrow: 'AI PIPELINE',
-    title: '문서 분석 파이프라인',
-    subtitle: '추출, 로컬 분석, 근거 검증',
-    x: 65,
-    y: 18,
-    tone: 'teal',
-    shape: 'process',
-  },
-  {
-    id: 'llm',
-    eyebrow: '분기',
-    title: 'LLM 사용 가능?',
-    subtitle: 'API Key / 환경변수 확인',
-    x: 0,
-    y: 0,
-    tone: 'pink',
-    shape: 'decision',
-  },
-  {
-    id: 'db',
-    eyebrow: 'DATA',
-    title: 'MongoDB',
-    subtitle: '회원, 프로젝트, 공유방 저장',
-    x: 66,
-    y: 62,
-    tone: 'navy',
-    shape: 'process',
-  },
-  {
-    id: 'ai',
-    eyebrow: 'EXTERNAL',
-    title: 'OpenAI / Gemini',
-    subtitle: '문서 근거 기반 답변 생성',
-    x: 84,
-    y: 18,
-    tone: 'pink',
-    shape: 'process',
-  },
-  {
-    id: 'grounding',
-    eyebrow: '분기',
-    title: '문서 근거와 일치?',
-    subtitle: '없는 수치/표현 탐지',
-    x: 0,
-    y: 0,
-    tone: 'teal',
-    shape: 'decision',
-  },
-  {
-    id: 'answer',
-    eyebrow: '응답',
-    title: '분석 답변 반환',
-    subtitle: '근거, 표, 추천 질문 표시',
-    x: 0,
-    y: 0,
-    tone: 'blue',
-    shape: 'document',
-  },
-  {
-    id: 'deploy',
-    eyebrow: 'DEPLOY',
-    title: 'Vercel + EC2',
-    subtitle: '실제 배포 구성 설명',
-    x: 84,
-    y: 62,
-    tone: 'gray',
-    shape: 'process',
-  },
-  {
-    id: 'ops',
-    eyebrow: 'OPS',
-    title: '운영 대응',
-    subtitle: 'health, ready, 요청 추적',
-    x: 45,
-    y: 78,
-    tone: 'slate',
-    shape: 'process',
-  },
-  {
-    id: 'end',
-    eyebrow: 'END',
-    title: '사용자 답변 확인',
-    subtitle: '저장 / 공유 / 후속 질문',
-    x: 0,
-    y: 0,
-    tone: 'blue',
-    shape: 'terminator',
-  },
-];
 
 const details: Record<NodeId, Detail> = {
   start: {
@@ -241,26 +78,6 @@ apiClient.post('/api/analysis/chat', formData);`,
     image: asset('/screens/analysis-result.jpg'),
     imageCaption: '실제 시연 화면: 분석 결과와 표 시각화가 프론트 화면에 표시됨',
   },
-  nginx: {
-    title: 'Nginx / Vercel Rewrite',
-    summary:
-      '배포 방식에 따라 API 요청 전달 방식이 달라집니다. Docker 실행에서는 nginx가 /api 요청을 FastAPI로 프록시하고, Vercel 배포에서는 vercel.json rewrite가 EC2 백엔드로 요청을 넘깁니다.',
-    servicePoint:
-      '이 구조를 쓰면 사용자는 하나의 웹 주소로 접속하고, nginx가 화면 요청과 API 요청을 내부에서 나누어 처리합니다.',
-    bullets: [
-      'Docker nginx: React 빌드 파일을 /usr/share/nginx/html에서 제공',
-      'Docker nginx: /api/* 요청은 backend:8000으로 proxy_pass',
-      'Vercel rewrite: /api/:path* 요청은 EC2 백엔드 IP:8000으로 전달',
-      '사용자는 프론트와 백엔드 분리를 의식하지 않고 하나의 서비스처럼 사용',
-      'client_max_body_size로 업로드 용량 제한을 설정',
-    ],
-    code: `location /api/ {
-  proxy_pass http://backend:8000/api/;
-  proxy_set_header Host $host;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_read_timeout 300s;
-}`,
-  },
   route: {
     title: '배포 방식 분기',
     summary:
@@ -277,6 +94,37 @@ apiClient.post('/api/analysis/chat', formData);`,
 
 Vercel 경로:
 브라우저 -> Vercel -> /api rewrite -> EC2:8000`,
+  },
+  nginx: {
+    title: 'Nginx (Docker)',
+    summary:
+      'Docker 통합 실행에서는 frontend 컨테이너의 nginx가 React 빌드 파일을 서빙하면서, /api 요청을 backend:8000으로 프록시합니다.',
+    servicePoint:
+      '이 구조를 쓰면 사용자는 하나의 웹 주소로 접속하고, nginx가 화면 요청과 API 요청을 내부에서 나누어 처리합니다.',
+    bullets: [
+      'Docker nginx: React 빌드 파일을 /usr/share/nginx/html에서 제공',
+      'Docker nginx: /api/* 요청은 backend:8000으로 proxy_pass',
+      'client_max_body_size로 업로드 용량 제한을 설정',
+    ],
+    code: `location /api/ {
+  proxy_pass http://backend:8000/api/;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_read_timeout 300s;
+}`,
+  },
+  vercel: {
+    title: 'Vercel rewrite',
+    summary:
+      'Vercel 배포에서는 vercel.json의 rewrite 설정으로 /api 요청을 EC2에서 실행 중인 FastAPI 백엔드(포트 8000)로 전달합니다.',
+    servicePoint:
+      'EC2에서 80/443 nginx를 직접 띄웠다면 그 설정은 서버 내부 nginx 설정 파일에 있고, 현재 로컬 프로젝트에는 Vercel rewrite 설정이 남아 있습니다.',
+    bullets: [
+      'frontend/vercel.json: /api 요청을 http://15.164.250.172:8000/api로 rewrite',
+      'EC2 80/443 리버스 프록시는 서버 설정으로 운영했을 수 있지만, 현재 저장소에는 직접적인 443 인증서/nginx site 설정은 없음',
+    ],
+    code: `// frontend/vercel.json
+"/api/:path*" -> "http://15.164.250.172:8000/api/:path*"`,
   },
   was: {
     title: 'FastAPI WAS',
@@ -296,6 +144,41 @@ app.include_router(projects_router)
 
 @app.get('/api/health')
 async def health_check(): ...`,
+  },
+  db: {
+    title: 'MongoDB 저장소',
+    summary:
+      'MongoDB는 서비스 데이터 저장소입니다. 사용자, 프로젝트, 공유방, 분석 결과 메타데이터를 저장해 사용자가 작업을 이어갈 수 있게 합니다.',
+    servicePoint:
+      '사용자가 분석한 결과를 프로젝트로 남기고 다시 열어볼 수 있으려면 저장소가 필요합니다. MongoDB는 이 작업 데이터를 유지합니다.',
+    bullets: [
+      '프로젝트 저장 및 복원',
+      '공유방, 댓글, 프로젝트 파일 관리',
+      'MongoDB healthcheck로 컨테이너 상태 확인',
+    ],
+    code: `MONGO_URL=mongodb://mongo:27017
+
+depends_on:
+  mongo:
+    condition: service_healthy`,
+  },
+  ops: {
+    title: '운영 대응과 증빙 포인트',
+    summary:
+      '서비스 운영 중 문제가 생기면 서버 상태 확인, DB 연결 확인, 요청 추적, 응답 시간 확인이 필요합니다. PaperMate 백엔드는 이를 위한 기본 장치를 갖고 있습니다.',
+    servicePoint:
+      '운영 대응은 실제 서비스에서 장애를 확인하고 원인을 좁히기 위한 구조입니다. health, ready, request id, process time이 그 역할을 합니다.',
+    bullets: [
+      '/api/health: 서버 프로세스 생존 확인',
+      '/api/ready: DB 연결까지 포함한 준비 상태 확인',
+      'X-Request-ID: 장애 요청 추적',
+      'X-Process-Time-MS: 응답 시간 확인',
+    ],
+    code: `response.headers['X-Request-ID'] = request_id
+response.headers['X-Process-Time-MS'] = elapsed_ms
+
+GET /api/health
+GET /api/ready`,
   },
   pipeline: {
     title: 'AI 문서 분석 파이프라인',
@@ -329,26 +212,8 @@ async def health_check(): ...`,
       'LLM 실패: fallback 답변으로 사용자에게 결과 제공',
     ],
   },
-  db: {
-    title: 'MongoDB 저장소',
-    summary:
-      'MongoDB는 서비스 데이터 저장소입니다. 사용자, 프로젝트, 공유방, 분석 결과 메타데이터를 저장해 사용자가 작업을 이어갈 수 있게 합니다.',
-    servicePoint:
-      '사용자가 분석한 결과를 프로젝트로 남기고 다시 열어볼 수 있으려면 저장소가 필요합니다. MongoDB는 이 작업 데이터를 유지합니다.',
-    bullets: [
-      '프로젝트 저장 및 복원',
-      '공유방, 댓글, 프로젝트 파일 관리',
-      'MongoDB healthcheck로 컨테이너 상태 확인',
-      '검색 속도를 위한 인덱스 준비 로직 포함',
-    ],
-    code: `MONGO_URL=mongodb://mongo:27017
-
-depends_on:
-  mongo:
-    condition: service_healthy`,
-  },
   ai: {
-    title: 'OpenAI / Gemini / Web Search',
+    title: 'OpenAI / Gemini',
     summary:
       '외부 AI API는 문서 기반 답변을 생성하는 데 사용됩니다. 단, 답변은 그대로 믿지 않고 grounding 검증을 거칩니다.',
     servicePoint:
@@ -357,7 +222,18 @@ depends_on:
       'OpenAI 또는 Gemini 중 사용 가능한 provider 선택',
       '질문 의도에 따라 웹 검색 보강 가능',
       '문서에 없는 수치가 발견되면 fallback으로 전환',
-      'API 키가 없어도 기본 문서 분석 답변 제공',
+    ],
+  },
+  fallback: {
+    title: 'Fallback 답변 생성',
+    summary:
+      'LLM을 사용할 수 없거나 grounding 검증에 실패한 경우, 문서에서 추출한 키워드, 수치, 관련 구간을 바탕으로 직접 답변을 구성합니다.',
+    servicePoint:
+      '외부 API 장애 시에도 서비스가 완전히 멈추지 않고 최소한의 답변을 제공할 수 있게 하는 안전장치입니다.',
+    bullets: [
+      '문서 추출 결과 기반 답변 생성',
+      'API 키 없음 / LLM 실패 / grounding 불일치 시 진입',
+      '관련 문서 구간을 함께 표시',
     ],
   },
   grounding: {
@@ -369,7 +245,7 @@ depends_on:
     bullets: [
       '문서 근거와 일치: 근거 포함 답변 반환',
       '단어 일치도 낮음: 관련 문서 구간을 함께 표시',
-      '문서에 없는 수치 감지: fallback 답변 반환',
+      '문서에 없는 수치 감지: fallback 답변으로 재검토',
     ],
   },
   answer: {
@@ -387,50 +263,6 @@ depends_on:
     image: asset('/screens/analysis-result.jpg'),
     imageCaption: '실제 시연 화면: 질문에 대한 답변과 표 시각화가 표시됨',
   },
-  deploy: {
-    title: '배포 구조와 프록시 설정',
-    summary:
-      '현재 프로젝트에는 두 가지 배포 연결 방식의 흔적이 남아 있습니다. Vercel은 /api 요청을 EC2 백엔드로 rewrite하고, Docker 실행에서는 frontend 컨테이너의 nginx가 /api 요청을 backend:8000으로 프록시합니다.',
-    servicePoint:
-      'EC2에서 80/443 nginx를 직접 띄웠다면 그 설정은 보통 서버 내부 nginx 설정 파일에 있고, 현재 로컬 프로젝트에는 Docker용 nginx.conf와 Vercel rewrite 설정이 남아 있습니다.',
-    bullets: [
-      'frontend/vercel.json: /api 요청을 http://15.164.250.172:8000/api로 rewrite',
-      'frontend/nginx.conf: Docker 안에서 /api 요청을 http://backend:8000/api로 proxy_pass',
-      'frontend/Dockerfile: nginx:1.27-alpine 기반, 컨테이너 내부 80번 포트 사용',
-      'docker-compose.yml: 현재 로컬/도커 실행에서는 3000:80으로 프론트 컨테이너 노출',
-      'EC2 80/443 리버스 프록시는 서버 설정으로 운영했을 수 있지만, 현재 저장소에는 직접적인 443 인증서/nginx site 설정은 없음',
-    ],
-    code: `// frontend/vercel.json
-"/api/:path*" -> "http://15.164.250.172:8000/api/:path*"
-
-// frontend/nginx.conf
-location /api/ {
-  proxy_pass http://backend:8000/api/;
-}
-
-// docker-compose.yml
-frontend: "3000:80"
-backend:  "\${BACKEND_PORT:-8000}:8000"`,
-  },
-  ops: {
-    title: '운영 대응과 증빙 포인트',
-    summary:
-      '서비스 운영 중 문제가 생기면 서버 상태 확인, DB 연결 확인, 요청 추적, 응답 시간 확인이 필요합니다. PaperMate 백엔드는 이를 위한 기본 장치를 갖고 있습니다.',
-    servicePoint:
-      '운영 대응은 실제 서비스에서 장애를 확인하고 원인을 좁히기 위한 구조입니다. health, ready, request id, process time이 그 역할을 합니다.',
-    bullets: [
-      '/api/health: 서버 프로세스 생존 확인',
-      '/api/ready: DB 연결까지 포함한 준비 상태 확인',
-      'X-Request-ID: 장애 요청 추적',
-      'X-Process-Time-MS: 응답 시간 확인',
-      '공통 예외 처리: 내부 오류를 사용자 친화 메시지로 반환',
-    ],
-    code: `response.headers['X-Request-ID'] = request_id
-response.headers['X-Process-Time-MS'] = elapsed_ms
-
-GET /api/health
-GET /api/ready`,
-  },
   end: {
     title: '사용자 답변 확인',
     summary:
@@ -446,81 +278,31 @@ GET /api/ready`,
   },
 };
 
-const connections: Array<[NodeId, NodeId, string]> = [
-  ['start', 'user', '서비스 시작'],
-  ['user', 'web', '파일 + 질문 입력'],
-  ['web', 'route', '/api 요청'],
-  ['route', 'nginx', '환경별 전달'],
-  ['nginx', 'was', '백엔드 API 호출'],
-  ['was', 'pipeline', '문서 분석 시작'],
-  ['pipeline', 'llm', 'LLM 가능 여부 확인'],
-  ['llm', 'ai', '가능'],
-  ['ai', 'grounding', '생성 답변 검증'],
-  ['llm', 'answer', '불가능: fallback'],
-  ['grounding', 'answer', '검증 후 응답'],
-  ['was', 'db', '저장/조회'],
-  ['was', 'ops', '상태 확인'],
-  ['nginx', 'deploy', '배포 근거'],
-  ['answer', 'end', '사용자에게 표시'],
-];
-
-const verticalFlow: Array<{ id: NodeId; label?: string; side?: NodeId[] }> = [
-  { id: 'start', label: '접속' },
-  { id: 'user', label: '문서와 질문 입력' },
-  { id: 'web', label: '프론트에서 API 요청 생성' },
-  { id: 'route', label: '실행 환경에 따라 요청 경로 결정', side: ['deploy'] },
-  { id: 'nginx', label: 'API 요청 전달' },
-  { id: 'was', label: '백엔드 기능 실행', side: ['db', 'ops'] },
-  { id: 'pipeline', label: '문서에서 근거 추출' },
-  { id: 'llm', label: 'AI 호출 또는 fallback 선택' },
-  { id: 'ai', label: 'LLM 답변 생성' },
-  { id: 'grounding', label: '문서 근거 검증' },
-  { id: 'answer', label: '결과 응답' },
-  { id: 'end' },
-];
-
-function nodeCenter(node: FlowNode) {
-  return { x: node.x, y: node.y };
-}
-
-function FlowLine({ from, to, label }: { from: FlowNode; to: FlowNode; label: string }) {
-  const start = nodeCenter(from);
-  const end = nodeCenter(to);
-  const midX = (start.x + end.x) / 2;
-  const midY = (start.y + end.y) / 2;
-
-  return (
-    <>
-      <line
-        className="flow-line"
-        x1={`${start.x}%`}
-        y1={`${start.y}%`}
-        x2={`${end.x}%`}
-        y2={`${end.y}%`}
-        markerEnd="url(#arrow)"
-      />
-      <text className="flow-label" x={`${midX}%`} y={`${midY}%`}>
-        {label}
-      </text>
-    </>
-  );
-}
-
 function App() {
-  const [activeId, setActiveId] = useState<NodeId>('nginx');
+  const [activeId, setActiveId] = useState<NodeId>('route');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const active = details[activeId];
-  const activeNode = nodes.find((node) => node.id === activeId);
-
-  const selectedConnections = useMemo(
-    () => connections.filter(([from, to]) => from === activeId || to === activeId),
-    [activeId],
-  );
 
   const selectNode = (id: NodeId) => {
     setActiveId(id);
     setIsDrawerOpen(true);
   };
+
+  const click = (id: NodeId) => ({
+    onClick: () => selectNode(id),
+    onKeyDown: (event: React.KeyboardEvent<SVGGElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectNode(id);
+      }
+    },
+    role: 'button',
+    tabIndex: 0,
+    'aria-label': `${details[id].title} 설명 보기`,
+    'data-node-id': id,
+    className: `flow-node-svg ${activeId === id ? 'active' : ''}`,
+    style: { cursor: 'pointer' },
+  });
 
   return (
     <main className="app-shell">
@@ -562,81 +344,304 @@ function App() {
             <p>노드를 클릭하면 오른쪽 패널의 설명이 바뀝니다.</p>
           </div>
 
-          <div className="flow-stage" aria-label="PaperMate 아키텍처 플로우차트">
-            <div className="vertical-flow">
-              {verticalFlow.map((step, index) => {
-                const node = nodes.find((item) => item.id === step.id)!;
-                return (
-                  <div className="flow-step" key={step.id}>
-                    <div className="flow-main-row">
-                      <div className={`side-slot left ${step.id === 'grounding' ? 'has-retry-route' : ''}`}>
-                        {step.id === 'grounding' && (
-                          <div className="branch-route retry-route">
-                            <div className="branch-target up">
-                              <span>LLM 사용 가능? 재검토</span>
-                            </div>
-                            <div className="branch-note">
-                              <b>불일치</b>
-                              <span>문서 근거 기준으로 재검토</span>
-                            </div>
-                          </div>
-                        )}
-                        {step.side?.map((sideId) => {
-                          const sideNode = nodes.find((item) => item.id === sideId)!;
-                          return (
-                            <button
-                              key={sideId}
-                              className={`flow-node inline side ${sideNode.shape || 'process'} ${sideNode.tone} ${activeId === sideId ? 'active' : ''}`}
-                              onClick={() => selectNode(sideId)}
-                            >
-                              <span>{sideNode.eyebrow}</span>
-                              <strong>{sideNode.title}</strong>
-                              <small>{sideNode.subtitle}</small>
-                            </button>
-                          );
-                        })}
-                      </div>
+          <div className="flow-stage" aria-label="PaperMate 아키텍처 분기형 플로우차트">
+            <svg width="100%" viewBox="0 0 680 980" role="img">
+              <title>PaperMate 서비스 분기형 플로우차트</title>
+              <desc>
+                사용자 접속부터 답변 반환까지, 배포 방식 분기, LLM 사용 가능 분기, 문서 근거
+                검증 분기와 재검토 루프를 포함한 좌우 분기형 플로우차트입니다.
+              </desc>
+              <defs>
+                <marker
+                  id="arrow"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="M2 1L8 5L2 9"
+                    fill="none"
+                    stroke="context-stroke"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </marker>
+              </defs>
 
-                      <button
-                        className={`flow-node inline ${node.shape || 'process'} ${node.tone} ${activeId === node.id ? 'active' : ''}`}
-                        onClick={() => selectNode(node.id)}
-                      >
-                        <span>{node.eyebrow}</span>
-                        <strong>{node.title}</strong>
-                        <small>{node.subtitle}</small>
-                      </button>
+              {/* START */}
+              <g {...click('start')}>
+                <rect className="c-gray" x="260" y="20" width="160" height="44" rx="22" strokeWidth="0.5" />
+                <text className="th" x="340" y="42" textAnchor="middle" dominantBaseline="central">
+                  서비스 접속
+                </text>
+              </g>
+              <line x1="340" y1="64" x2="340" y2="100" className="arr" markerEnd="url(#arrow)" />
 
-                      <div className="side-slot right">
-                        {step.id === 'llm' && (
-                          <div className="branch-route fallback-route">
-                            <div className="branch-note">
-                              <b>아니오</b>
-                              <span>fallback 답변 생성</span>
-                            </div>
-                            <div className="branch-target down">
-                              <span>분석 답변 반환</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+              {/* USER */}
+              <g {...click('user')}>
+                <rect className="c-blue" x="240" y="100" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="118" textAnchor="middle" dominantBaseline="central">
+                  문서 업로드 / 질문
+                </text>
+                <text className="ts" x="340" y="138" textAnchor="middle" dominantBaseline="central">
+                  React 화면에서 입력
+                </text>
+              </g>
+              <line x1="340" y1="156" x2="340" y2="192" className="arr" markerEnd="url(#arrow)" />
 
-                    {index < verticalFlow.length - 1 && (
-                      <div className="flow-connector">
-                        <span>{step.label}</span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+              {/* WEB */}
+              <g {...click('web')}>
+                <rect className="c-purple" x="240" y="192" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="210" textAnchor="middle" dominantBaseline="central">
+                  React 화면
+                </text>
+                <text className="ts" x="340" y="230" textAnchor="middle" dominantBaseline="central">
+                  API 요청 생성
+                </text>
+              </g>
+              <line x1="340" y1="248" x2="340" y2="284" className="arr" markerEnd="url(#arrow)" />
 
-          <div className="selected-path">
-            <strong>{activeNode?.title}</strong>
-            <span>
-              관련 연결: {selectedConnections.map(([from, to]) => `${details[from].title} -> ${details[to].title}`).join(' / ') || '단독 노드'}
-            </span>
+              {/* ROUTE (decision diamond) */}
+              <g {...click('route')}>
+                <path
+                  d="M340 264 L420 314 L340 364 L260 314 Z"
+                  className="c-green"
+                  strokeWidth="0.5"
+                />
+                <text className="th" x="340" y="306" textAnchor="middle" dominantBaseline="central">
+                  배포 방식은?
+                </text>
+                <text className="ts" x="340" y="324" textAnchor="middle" dominantBaseline="central">
+                  Vercel / Docker
+                </text>
+              </g>
+
+              {/* branch labels */}
+              <text className="ts" x="430" y="300" textAnchor="start">
+                Docker
+              </text>
+              <line x1="420" y1="314" x2="460" y2="314" className="arr" markerEnd="url(#arrow)" />
+
+              <text className="ts" x="250" y="300" textAnchor="end">
+                Vercel
+              </text>
+              <line x1="260" y1="314" x2="220" y2="314" className="arr" markerEnd="url(#arrow)" />
+
+              {/* NGINX (docker) */}
+              <g {...click('nginx')}>
+                <rect className="c-green" x="460" y="286" width="180" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="550" y="304" textAnchor="middle" dominantBaseline="central">
+                  Nginx 프록시
+                </text>
+                <text className="ts" x="550" y="324" textAnchor="middle" dominantBaseline="central">
+                  /api {'->'} backend:8000
+                </text>
+              </g>
+
+              {/* VERCEL */}
+              <g {...click('vercel')}>
+                <rect className="c-gray" x="40" y="286" width="180" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="130" y="304" textAnchor="middle" dominantBaseline="central">
+                  Vercel rewrite
+                </text>
+                <text className="ts" x="130" y="324" textAnchor="middle" dominantBaseline="central">
+                  /api {'->'} EC2:8000
+                </text>
+              </g>
+
+              {/* merge into WAS */}
+              <path
+                d="M550 342 L550 380 L340 380 L340 400"
+                fill="none"
+                stroke="var(--t)"
+                strokeWidth="0.5"
+                className="arr"
+                markerEnd="url(#arrow)"
+              />
+              <path d="M130 342 L130 380 L340 380" fill="none" stroke="var(--t)" strokeWidth="0.5" />
+
+              {/* WAS */}
+              <g {...click('was')}>
+                <rect className="c-coral" x="240" y="400" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="418" textAnchor="middle" dominantBaseline="central">
+                  FastAPI 백엔드
+                </text>
+                <text className="ts" x="340" y="438" textAnchor="middle" dominantBaseline="central">
+                  인증, 파일, 분석 API
+                </text>
+              </g>
+
+              {/* DB side branch */}
+              <text className="ts" x="450" y="412" textAnchor="start">
+                저장/조회
+              </text>
+              <line x1="440" y1="420" x2="500" y2="420" className="arr" markerEnd="url(#arrow)" />
+              <g {...click('db')}>
+                <rect className="c-teal" x="500" y="396" width="140" height="48" rx="8" strokeWidth="0.5" />
+                <text className="th" x="570" y="412" textAnchor="middle" dominantBaseline="central">
+                  MongoDB
+                </text>
+                <text className="ts" x="570" y="430" textAnchor="middle" dominantBaseline="central">
+                  프로젝트 저장
+                </text>
+              </g>
+
+              {/* OPS side branch */}
+              <text className="ts" x="450" y="460" textAnchor="start">
+                상태 확인
+              </text>
+              <line x1="440" y1="448" x2="500" y2="468" className="arr" markerEnd="url(#arrow)" />
+              <g {...click('ops')}>
+                <rect className="c-gray" x="500" y="466" width="140" height="48" rx="8" strokeWidth="0.5" />
+                <text className="th" x="570" y="482" textAnchor="middle" dominantBaseline="central">
+                  운영 대응
+                </text>
+                <text className="ts" x="570" y="500" textAnchor="middle" dominantBaseline="central">
+                  health, ready
+                </text>
+              </g>
+
+              <line x1="340" y1="456" x2="340" y2="492" className="arr" markerEnd="url(#arrow)" />
+
+              {/* PIPELINE */}
+              <g {...click('pipeline')}>
+                <rect className="c-teal" x="240" y="492" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="510" textAnchor="middle" dominantBaseline="central">
+                  문서 분석 파이프라인
+                </text>
+                <text className="ts" x="340" y="530" textAnchor="middle" dominantBaseline="central">
+                  추출, 로컬 분석
+                </text>
+              </g>
+              <line x1="340" y1="548" x2="340" y2="584" className="arr" markerEnd="url(#arrow)" />
+
+              {/* LLM decision */}
+              <g {...click('llm')}>
+                <path
+                  d="M340 564 L420 614 L340 664 L260 614 Z"
+                  className="c-pink"
+                  strokeWidth="0.5"
+                />
+                <text className="th" x="340" y="606" textAnchor="middle" dominantBaseline="central">
+                  LLM 사용
+                </text>
+                <text className="ts" x="340" y="624" textAnchor="middle" dominantBaseline="central">
+                  가능?
+                </text>
+              </g>
+
+              <text className="ts" x="430" y="600" textAnchor="start">
+                예
+              </text>
+              <line x1="420" y1="614" x2="460" y2="614" className="arr" markerEnd="url(#arrow)" />
+
+              <text className="ts" x="250" y="600" textAnchor="end">
+                아니오
+              </text>
+              <path
+                d="M260 614 L150 614 L150 700 L240 700"
+                fill="none"
+                stroke="var(--t)"
+                strokeWidth="0.5"
+                className="arr"
+                markerEnd="url(#arrow)"
+              />
+
+              {/* AI */}
+              <g {...click('ai')}>
+                <rect className="c-pink" x="460" y="586" width="180" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="550" y="604" textAnchor="middle" dominantBaseline="central">
+                  OpenAI / Gemini
+                </text>
+                <text className="ts" x="550" y="624" textAnchor="middle" dominantBaseline="central">
+                  문서 근거 기반 답변
+                </text>
+              </g>
+
+              {/* FALLBACK */}
+              <g {...click('fallback')}>
+                <rect className="c-blue" x="240" y="672" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="690" textAnchor="middle" dominantBaseline="central">
+                  fallback 답변 생성
+                </text>
+                <text className="ts" x="340" y="710" textAnchor="middle" dominantBaseline="central">
+                  문서 추출 결과 기반
+                </text>
+              </g>
+
+              <line x1="550" y1="642" x2="550" y2="700" className="arr" markerEnd="url(#arrow)" />
+
+              {/* GROUNDING decision */}
+              <g {...click('grounding')}>
+                <path
+                  d="M550 660 L640 700 L550 740 L460 700 Z"
+                  className="c-teal"
+                  strokeWidth="0.5"
+                />
+                <text className="th" x="550" y="692" textAnchor="middle" dominantBaseline="central">
+                  문서 근거
+                </text>
+                <text className="ts" x="550" y="710" textAnchor="middle" dominantBaseline="central">
+                  와 일치?
+                </text>
+              </g>
+
+              <text className="ts" x="455" y="688" textAnchor="end">
+                불일치
+              </text>
+              <path
+                d="M460 700 L40 700 L40 614 L260 614"
+                fill="none"
+                stroke="var(--t)"
+                strokeWidth="0.5"
+                strokeDasharray="4 3"
+                className="arr"
+                markerEnd="url(#arrow)"
+              />
+              <text className="ts" x="60" y="630" textAnchor="start">
+                재검토 (LLM 분기로)
+              </text>
+
+              <text className="ts" x="555" y="752" textAnchor="middle">
+                일치
+              </text>
+              <line x1="550" y1="740" x2="550" y2="800" className="arr" markerEnd="url(#arrow)" />
+
+              <path d="M340 728 L340 800" fill="none" stroke="var(--t)" strokeWidth="0.5" className="arr" markerEnd="url(#arrow)" />
+
+              {/* ANSWER */}
+              <g {...click('answer')}>
+                <rect className="c-blue" x="240" y="800" width="200" height="56" rx="8" strokeWidth="0.5" />
+                <text className="th" x="340" y="818" textAnchor="middle" dominantBaseline="central">
+                  분석 답변 반환
+                </text>
+                <text className="ts" x="340" y="838" textAnchor="middle" dominantBaseline="central">
+                  근거, 표, 추천 질문
+                </text>
+              </g>
+              <path
+                d="M550 800 L550 828 L440 828"
+                fill="none"
+                stroke="var(--t)"
+                strokeWidth="0.5"
+                className="arr"
+                markerEnd="url(#arrow)"
+              />
+
+              <line x1="340" y1="856" x2="340" y2="892" className="arr" markerEnd="url(#arrow)" />
+
+              {/* END */}
+              <g {...click('end')}>
+                <rect className="c-gray" x="260" y="892" width="160" height="44" rx="22" strokeWidth="0.5" />
+                <text className="th" x="340" y="914" textAnchor="middle" dominantBaseline="central">
+                  사용자 답변 확인
+                </text>
+              </g>
+            </svg>
           </div>
         </div>
 
@@ -650,7 +655,6 @@ function App() {
           <button className="drawer-close" type="button" onClick={() => setIsDrawerOpen(false)}>
             닫기
           </button>
-          <div className={`detail-accent ${activeNode?.tone || ''}`} />
           <p className="eyebrow">Service Detail</p>
           <h2>{active.title}</h2>
           <p className="summary">{active.summary}</p>
@@ -676,8 +680,6 @@ function App() {
           )}
         </aside>
       </section>
-
-  
 
       <section className="service-summary">
         <p className="eyebrow">Service Summary</p>
