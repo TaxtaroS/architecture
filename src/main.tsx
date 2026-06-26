@@ -120,11 +120,11 @@ Vercel 경로:
     servicePoint:
       'EC2에서 80/443 nginx를 직접 띄웠다면 그 설정은 서버 내부 nginx 설정 파일에 있고, 현재 로컬 프로젝트에는 Vercel rewrite 설정이 남아 있습니다.',
     bullets: [
-      'frontend/vercel.json: /api 요청을 http://15.164.250.172:8000/api로 rewrite',
+      'frontend/vercel.json: /api 요청을 http://54.166.238.90:8000/api로 rewrite',
       'EC2 80/443 리버스 프록시는 서버 설정으로 운영했을 수 있지만, 현재 저장소에는 직접적인 443 인증서/nginx site 설정은 없음',
     ],
     code: `// frontend/vercel.json
-"/api/:path*" -> "http://15.164.250.172:8000/api/:path*"`,
+"/api/:path*" -> "http://54.166.238.90:8000/api/:path*"`,
   },
   was: {
     title: 'FastAPI WAS',
@@ -190,7 +190,7 @@ GET /api/ready`,
       '문서 추출: PDF/HWPX/DOCX/이미지/TXT 텍스트 추출',
       'HWPX/OWPML 처리: ZIP 패키지 내부의 XML 파일을 열어 본문 텍스트와 이미지 자산을 파싱',
       '로컬 분석: 키워드, 수치 후보, 주제 후보, 관련 문서 구간 추출',
-      'LLM 호출: OpenAI 또는 Gemini를 환경과 요청에 맞게 선택',
+      'LLM 호출: OpenAI 기반 문서 답변 생성',
       'Grounding 검증: 업로드 문서에 없는 수치나 표현을 탐지',
       'Fallback: API 키가 없거나 LLM 실패 시 문서 기반 답변 제공',
     ],
@@ -205,23 +205,23 @@ GET /api/ready`,
   llm: {
     title: 'LLM 사용 가능 여부',
     summary:
-      '백엔드는 요청 또는 환경변수에서 OpenAI/Gemini API 키를 확인합니다. 키가 있으면 LLM 분석으로 진행하고, 없거나 실패하면 문서 추출 결과 기반 fallback 답변을 만듭니다.',
+      '백엔드는 요청 또는 환경변수에서 OpenAI API 키를 확인합니다. 키가 있으면 LLM 분석으로 진행하고, 없거나 실패하면 문서 추출 결과 기반 fallback 답변을 만듭니다.',
     servicePoint:
       '이 분기 덕분에 외부 AI API가 항상 성공해야만 서비스가 동작하는 구조가 아니게 됩니다.',
     bullets: [
-      'API 키 있음: OpenAI 또는 Gemini 호출',
+      'API 키 있음: OpenAI 호출',
       'API 키 없음: 로컬 추출/분석 기반 답변 생성',
       'LLM 실패: fallback 답변으로 사용자에게 결과 제공',
     ],
   },
   ai: {
-    title: 'OpenAI / Gemini',
+    title: 'OpenAI',
     summary:
       '외부 AI API는 문서 기반 답변을 생성하는 데 사용됩니다. 단, 답변은 그대로 믿지 않고 grounding 검증을 거칩니다.',
     servicePoint:
       '외부 AI API는 답변 생성 능력을 제공하고, PaperMate 백엔드는 그 답변이 업로드 문서와 맞는지 한 번 더 점검합니다.',
     bullets: [
-      'OpenAI 또는 Gemini 중 사용 가능한 provider 선택',
+      'OpenAI provider 기반 답변 생성',
       '질문 의도에 따라 웹 검색 보강 가능',
       '문서에 없는 수치가 발견되면 fallback으로 전환',
     ],
@@ -557,7 +557,7 @@ function App() {
               <g {...click('ai')}>
                 <rect className="c-pink" x="460" y="586" width="180" height="56" rx="8" strokeWidth="0.5" />
                 <text className="th" x="550" y="604" textAnchor="middle" dominantBaseline="central">
-                  OpenAI / Gemini
+                  OpenAI
                 </text>
                 <text className="ts" x="550" y="624" textAnchor="middle" dominantBaseline="central">
                   문서 근거 기반 답변
